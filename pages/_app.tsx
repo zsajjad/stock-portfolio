@@ -6,14 +6,16 @@
 import App from 'next/app';
 import Head from 'next/head';
 import { Router } from 'next/router';
-
-// import { GoogleFont } from 'react-typography';
+import { GoogleFont } from 'react-typography';
+import { Auth } from '@supabase/ui';
 
 import { getLocale, getMessages } from 'i18n';
-import 'global-styles';
 
+import 'global-styles';
 import IntlProvider from 'theme/IntlProvider';
 import typography from 'theme/Typography';
+
+import { supabase } from 'services/supabase';
 
 const loadSideEffects = () => {};
 
@@ -50,11 +52,13 @@ class MyApp extends App<{
       <>
         <Head>
           <title>Stock Trading - Supabase</title>
+          <GoogleFont typography={typography} />
           <style data-typography>{typography.toString()}</style>
-          {/* <GoogleFont typography={typography} /> */}
         </Head>
         <IntlProvider locale={locale || 'en'} messages={messages}>
-          <Component {...pageProps} />
+          <Auth.UserContextProvider supabaseClient={supabase}>
+            <Component {...pageProps} />
+          </Auth.UserContextProvider>
         </IntlProvider>
       </>
     );
